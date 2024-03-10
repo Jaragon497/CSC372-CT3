@@ -4,7 +4,9 @@ import javafx.scene.Scene;
 import javafx.scene.layout.*;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import javafx.scene.paint.Color;
 
+import java.util.Random;
 import java.io.FileWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -14,6 +16,7 @@ public class Critical3 extends Application {
     private TextArea textBox;
     private VBox vertLayout;
     private MenuItem menuChangeBg;
+    private final Random random = new Random();
 
     // launch the application
     public void start(Stage stage)
@@ -86,47 +89,11 @@ public class Critical3 extends Application {
     }
 
     private void setBgColor(){
-        String randomGreen = randomGreen();
-        vertLayout.setStyle("-fx-background-color: " + randomGreen);
-    }
-
-    private String randomGreen(){
-        // Create placeholder values
-        double rVal;
-        double gVal;
-        double bVal;
-
-        // Randomly generate values, ensuring that color will be green
-        do {
-            rVal = Math.random();
-            gVal = Math.random();
-            bVal = Math.random();
-        } while (gVal < 0.3 || rVal > gVal - 0.15 || bVal > gVal - 0.15);
-
-        int hue = getHue(rVal, gVal, bVal);
-
-        // Convert random values into hex values
-        int r = (int) (rVal * 255);
-        int g = (int) (gVal * 255);
-        int b = (int) (bVal * 255);
-
-        // Update menu item (bullet #3 in instructions)
-        menuChangeBg.setText("Change Background Color (Hue: " + hue + ")");
-        return String.format("#%02x%02x%02x", r, g, b);
-    }
-
-    // Algo to calculate hue
-    private int getHue(double r, double g, double b){
-        double min = Math.min(r, b);
-        double hueRaw = 2.0 + (b - r)/(g - min);
-
-        int hue = (int) (hueRaw*60);
-        if (hue < 0){
-            hue += 360;
-        }
-        // Output for debugging purposes
-        System.out.println("Current hue: " + hue);
-        return hue;
+        int randomGreenHue = random.nextInt(180); // Generate random green hue (0-179)
+            Color newColor = Color.hsb(randomGreenHue, 1f, 1f);
+            Background bg = new Background(new BackgroundFill(newColor, CornerRadii.EMPTY, Insets.EMPTY));
+            vertLayout.setBackground(bg);
+            menuChangeBg.setText("Change Background Color (Green: " + randomGreenHue + ")"); // Update menu item text with chosen hue
     }
 
     public static void main(String[] args)
